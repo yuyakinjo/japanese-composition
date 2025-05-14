@@ -13,7 +13,6 @@ bun.lock
 *.tsbuildinfo
 
 # Editor
-.vscode/
 .idea/
 *.swp
 
