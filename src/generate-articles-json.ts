@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Article } from "./types/article";
-import { REGEX } from "./libs/regex";
 import { CONSTANTS } from "./libs/constants";
+import { REGEX } from "./libs/regex";
+import type { Article } from "./types/article";
 
 // COMPOSITION.md をパースして articles.json を生成
 const generateCompositionJson = () => {

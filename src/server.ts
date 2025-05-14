@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import type { Article } from "./types/article";
 import articles from "./articles.json" assert { type: "json" };
+import type { Article } from "./types/article";
 
 const app = new Hono();
 
