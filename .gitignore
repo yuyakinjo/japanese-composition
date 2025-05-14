@@ -1,0 +1,26 @@
+# Node/Bun
+node_modules/
+bun.lockb
+bun.lock
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Build/Dist
+/dist/
+/build/
+
+# Env
+.env
+.env.*
