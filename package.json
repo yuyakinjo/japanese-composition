@@ -6,12 +6,16 @@
   "scripts": {
     "dev": "bun --watch src/server.ts",
     "gen:articles": "bun run src/generate-articles-json.ts",
-    "test": "bun test"
+    "test": "bun test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "hono": "^4.7.9"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.13",
     "@types/node": "^22.15.17",
     "tsx": "^4.19.4",
