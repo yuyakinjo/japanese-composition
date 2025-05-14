@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { loadArticles } from "./constitution-loader";
-import type { Article } from "./constitution-loader";
+import type { Article } from "./types/article";
 
 const app = new Hono();
 
@@ -27,12 +27,13 @@ app.get("/search", (c) => {
 app.get("/mcp/context", (c) => {
   return c.json({
     name: "日本国憲法 MCP サーバー",
-    description: "日本国憲法の条文データをMCPプロトコルで提供します。出典: 国立国会図書館",
+    description:
+      "日本国憲法の条文データをMCPプロトコルで提供します。出典: 国立国会図書館",
     version: "1.0.0",
     model: "constitution-articles",
     provider: "japanese-composition-mcp-server",
     license: "CC BY 4.0",
-    source: "https://www.ndl.go.jp/constitution/"
+    source: "https://www.ndl.go.jp/constitution/",
   });
 });
 

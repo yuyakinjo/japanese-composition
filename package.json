@@ -4,7 +4,8 @@
   "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "bun --watch src/server.ts"
+    "dev": "bun --watch src/server.ts",
+    "gen:articles": "bun run src/generate-articles-json.ts"
   },
   "dependencies": {
     "hono": "^4.7.9"
