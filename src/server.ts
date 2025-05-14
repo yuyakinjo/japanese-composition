@@ -1,20 +1,16 @@
 import { Hono } from "hono";
-import { loadArticles } from "./constitution-loader";
 import type { Article } from "./types/article";
+import articles from "./articles.json" assert { type: "json" };
 
 const app = new Hono();
-
-// 憲法データのロード（Mapから取得）
-const articles: Article[] = loadArticles();
 
 app.get("/articles", (c) => c.json(articles));
 
 app.get("/articles/:id", (c) => {
   const article = articles.find((a) => a.id === c.req.param("id"));
-  if (article) {
-    return c.json(article);
-  }
-  return c.json({ error: "Not found" }, 404);
+  if (!article) return c.json({ error: "Not found" }, 404);
+
+  return c.json(article);
 });
 
 app.get("/search", (c) => {

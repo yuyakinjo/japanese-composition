@@ -1,14 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Article } from "./types/article";
+import { REGEX } from "./libs/regex";
+import { CONSTANTS } from "./libs/constants";
 
 // COMPOSITION.md をパースして articles.json を生成
 const generateCompositionJson = () => {
   // COMPOSITION.md を読み込む
-  const compositionPath = path.join(process.cwd(), "COMPOSITION.md");
-  const compositionMd = fs.readFileSync(compositionPath, "utf-8");
+  const compositionPath = path.join(
+    process.cwd(),
+    CONSTANTS.COMPOSITION_MARKDOWN_FILE,
+  );
+  const compositionMd = fs.readFileSync(compositionPath, CONSTANTS.UTF_8);
 
-  const lines = compositionMd.split(/\r?\n/); // 条文ごとの行分割
+  const lines = compositionMd.split(REGEX.LINE_BREAK); // 条文ごとの行分割
   const articles: Article[] = []; // 条文データ配列
   let current: Article | null = null; // 現在の条文データ
 
@@ -31,42 +36,43 @@ const generateCompositionJson = () => {
     { chapter: 10, chapterTitle: "第10章 最高法規", start: 97, end: 99 },
     { chapter: 11, chapterTitle: "第11章 補則", start: 100, end: 103 },
   ];
+  const newLine = "\n";
 
   for (const line of lines) {
     const trimmed = line.trim();
-    const m = trimmed.match(/第([0-9一二三四五六七八九十百]+)条/);
+    const m = trimmed.match(REGEX.ARTICLE_NUMBER);
     if (m) {
       if (current) articles.push(current);
       current = {
         id: m[1],
         fullText: trimmed,
         text: "",
+        chapter: "",
+        chapterTitle: "",
       };
     } else if (current && trimmed) {
-      current.text += (current.text ? "\n" : "") + trimmed;
+      current.text += (current.text ? newLine : "") + trimmed;
     }
   }
   if (current) articles.push(current);
 
   for (const article of articles) {
-    const match = article.fullText.match(
-      /^\*\*第[0-9一二三四五六七八九十百]+条\*\*\s*(.*)$/,
-    );
+    const match = article.fullText.match(REGEX.ARTICLE_TITLE);
     if (match) {
       article.text =
         match[1] +
         (article.text
-          ? (match[1] && article.text ? "\n" : "") + article.text
+          ? (match[1] && article.text ? `${newLine}` : "") + article.text
           : "");
-      article.fullText = `${article.fullText}${article.text ? (match[1] && article.text ? "\n" : "") + article.text : ""}`;
+      article.fullText = `${article.fullText}${article.text ? (match[1] && article.text ? `${newLine}` : "") + article.text : ""}`;
     } else {
-      article.fullText = `${article.fullText}${article.text ? `\n${article.text}` : ""}`;
+      article.fullText = `${article.fullText}${article.text ? `${newLine}${article.text}` : ""}`;
     }
   }
 
   // 章タイトル行（### 第N章 ...）を除外
   const filtered = articles.filter(
-    (a) => !/^### 第[0-9一二三四五六七八九十百]+章/.test(a.fullText),
+    (a) => !REGEX.CHAPTER_TITLE_LINE.test(a.fullText),
   );
 
   // 各条文にchapterとchapterTitleを付与
